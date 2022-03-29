@@ -1,0 +1,9 @@
+name               = "my-project-name"
+environment        = "test"
+availability_zones = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
+private_subnets    = ["10.31.0.0/20", "10.31.32.0/20"]
+public_subnets     = ["10.31.16.0/20", "10.31.48.0/20"]
+# tsl_certificate_arn = "mycertificatearn"
+# container_memory    = 512
+container_image       = "nginx"
+container_environment = ["dev"]
