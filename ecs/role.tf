@@ -53,8 +53,9 @@ resource "aws_iam_role_policy_attachment" "ecs-task-role-policy-attachment" {
   policy_arn = aws_iam_policy.dynamodb.arn
 }
 
+############## AmazonECSTaskExecutionRolePolicy ####################
 resource "aws_iam_role" "ecs_task_execution_role" {
-  name = "${var.name}-ecsTaskExecutionRole"
+  name = "ecsTaskExecutionRole"
 
   assume_role_policy = <<EOF
 {
@@ -78,8 +79,9 @@ resource "aws_iam_role_policy_attachment" "ecs-task-execution-role-policy-attach
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
+########### AmazonEC2ContainerServiceRole  ###############################
 resource "aws_iam_role" "ecs_container_service_role" {
-  name = "${var.name}-ecsContainerServiceRole"
+  name = "ecsContainerServiceRole"
 
   assume_role_policy = <<EOF
 {
@@ -102,3 +104,56 @@ resource "aws_iam_role_policy_attachment" "AmazonEC2ContainerServiceRole" {
   role       = aws_iam_role.ecs_container_service_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceRole"
 }
+
+########### AmazonEC2ContainerServiceAutoscaleRole  ##################
+resource "aws_iam_role" "ecs_container_service_autoscale_role" {
+  name = "ecsEC2ContainerServiceAutoscaleRole"
+
+  assume_role_policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "",
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "application-autoscaling.amazonaws.com"
+            },
+            "Action": "sts:AssumeRole"
+        }
+    ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "AmazonEC2ContainerServiceAutoscaleRole" {
+  role       = aws_iam_role.ecs_container_service_autoscale_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceAutoscaleRole"
+}
+
+############ AmazonEC2ContainerServiceforEC2Role ######################################
+resource "aws_iam_role" "ecs_ec2_container_service_role" {
+  name = "ecsEC2ContainerServiceforEC2Role"
+
+  assume_role_policy = <<EOF
+{
+    "Version": "2008-10-17",
+    "Statement": [
+        {
+            "Sid": "",
+            "Effect": "Allow",
+            "Principal": {
+                "Service": "ec2.amazonaws.com"
+            },
+            "Action": "sts:AssumeRole"
+        }
+    ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "AmazonEC2ContainerServiceforEC2Role" {
+  role       = aws_iam_role.ecs_ec2_container_service_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
+}
+
